@@ -1,0 +1,29 @@
+{
+  "name": "@bookly/graphql-schema",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@graphql-tools/load-files": "^7.0.1",
+    "@graphql-tools/merge": "^9.0.19",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@bookly/database": "workspace:*",
+    "typescript": "^5.0.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-resolvers": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
+    "graphql": "^16.0.0"
+  }
+}

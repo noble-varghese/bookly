@@ -1,14 +1,20 @@
 {
-  "name": "bookly-app",
+  "name": "bookly",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "check-types": "turbo run check-types",
+    "migrate": "pnpm dotenv -- pnpm --filter database migrate",
+    "backend:dev":"pnpm dotenv -- pnpm --filter api dev",
+    "frontend:dev": "pnpm dotenv -- pnpm --filter web dev"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.5",
+    "@types/node": "^20.17.19",
+    "dotenv-cli": "^8.0.0",
     "prettier": "^3.5.0",
     "turbo": "^2.4.2",
     "typescript": "5.7.3"
