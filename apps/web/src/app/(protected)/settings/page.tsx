@@ -1,18 +1,36 @@
 'use client'
 
-import { useRef, useState } from 'react'
-import Image from 'next/image'
-import { User, Mail, Bell, Shield, Palette, HelpCircle, PlusIcon } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar'
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/app/components/ui/tooltip'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { getInitials, getUserDetails } from '@/lib/userDetailsUtils'
+import { PlusIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('profile')
-
   const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [userDetails, setUserDetails] = useState({
+    name: '',
+    email: '',
+    avatarUrl: '',
+    firstName: '',
+    lastName: ''
+  })
 
-  const [imageUrl, setImageUrl] = useState<string>("/api/placeholder/32/32")
+  const [imageUrl, setImageUrl] = useState<string>("")
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const userDetails = await getUserDetails()
+      if (userDetails) {
+        const [firstName, lastName] = userDetails.name.split(' ');
+        setUserDetails({...userDetails, firstName, lastName})
+        setImageUrl(userDetails.avatarUrl)
+      }
+    }
+    fetchUserDetails()
+  }, [])
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -38,7 +56,7 @@ const SettingsPage = () => {
                 <Avatar className='h-28 w-28'>
                   <AvatarImage src={imageUrl} className='h-28 w-28'
                     alt="Profile picture" />
-                  <AvatarFallback>KA</AvatarFallback>
+                  <AvatarFallback>{getInitials(userDetails.name)}</AvatarFallback>
                 </Avatar>
                 <input
                   type="file"
@@ -65,7 +83,7 @@ const SettingsPage = () => {
                 </Tooltip>
               </div>
               <div>
-                <h3 className="font-medium text-bookly-brown">Profile Photo</h3>
+                <h3 className="font-medium text-bookly-brown">{userDetails.name}</h3>
                 <p className="text-sm text-gray-500">Update your profile photo</p>
               </div>
             </div>
@@ -78,7 +96,8 @@ const SettingsPage = () => {
                   <input
                     type="text"
                     className="w-full p-2 text-bookly-textInput border border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
-                    placeholder="John"
+                    value={userDetails.firstName}
+                    readOnly
                   />
                 </div>
                 <div>
@@ -88,7 +107,8 @@ const SettingsPage = () => {
                   <input
                     type="text"
                     className="w-full text-bookly-textInput p-2 border border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
-                    placeholder="Doe"
+                    value={userDetails.lastName}
+                    readOnly
                   />
                 </div>
               </div>
@@ -100,7 +120,8 @@ const SettingsPage = () => {
                 <input
                   type="email"
                   className="w-full text-bookly-textInput p-2 border border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
-                  placeholder="john@example.com"
+                  value={userDetails.email}
+                  readOnly
                 />
               </div>
               <div>

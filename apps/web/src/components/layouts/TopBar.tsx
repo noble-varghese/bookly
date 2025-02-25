@@ -1,8 +1,10 @@
-import { Search } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Avatar, AvatarFallback } from '@/app/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { supabase } from '@/lib/supabase'
+import { getInitials, getUserDetails } from '@/lib/userDetailsUtils'
 import { AvatarImage } from '@radix-ui/react-avatar'
+import { Search } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 const categories = [
   { label: "All", href: "#" },
@@ -15,7 +17,35 @@ const categories = [
   { label: "Astrology", href: "#" },
 ]
 
+interface CachedUserDetails {
+  name: string;
+  email: string;
+  avatarUrl: string;
+  timestamp: number;
+}
+
 const TopBar = () => {
+  const [userDetails, setUserDetails] = useState({
+    name: '',
+    email: '',
+    avatarUrl: ''
+  })
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const userDetails = await getUserDetails();
+      console.log('======>>>>>>>>>>>>>>>>>>>>>', userDetails);
+      if (userDetails) {
+        setUserDetails(userDetails);
+      }
+    };
+    fetchUserDetails();
+  }, []);
+
+  console.log('User Details:', userDetails);
+  console.log('Avatar URL:', userDetails.avatarUrl);
+
+  
   return (
     <div className="flex flex-col gap-4 pl-0 p-4 bg-bookly-cream">
       <div className="flex items-center justify-between">
@@ -31,11 +61,11 @@ const TopBar = () => {
         {/* Profile Section */}
         <div className="flex items-center gap-2 ml-4">
           <Avatar>
-            <AvatarImage src="/api/placeholder/32/32"
+            <AvatarImage src="https://lh3.googleusercontent.com/a/ACg8ocLt7EBbzlasF-mRsKlNdCrAXM5MfEukWJUO9vm8PjDMGnlKZCY=s96-c"
               alt="Profile picture" />
-              <AvatarFallback>KA</AvatarFallback>
+            <AvatarFallback>{getInitials(userDetails.name)}</AvatarFallback>
           </Avatar>
-          <span className="font-medium text-bookly-brown">Kate Austen</span>
+          <span className="font-medium text-bookly-brown">{userDetails.name}</span>
         </div>
       </div>
 
