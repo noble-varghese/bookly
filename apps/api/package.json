@@ -36,7 +36,10 @@
     "sequelize": "^6.37.5",
     "ts-node-dev": "^2.0.0",
     "type-graphql": "2.0.0-rc.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4"
+
   },
   "devDependencies": {
     "@graphql-tools/load-files": "^7.0.1",
