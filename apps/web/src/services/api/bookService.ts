@@ -44,7 +44,7 @@ export class BookService {
 
     static async deleteBook(input: DeleteBookInput): Promise<boolean> {
         try {
-            const response = await graphqlClient.request<{deleteBook: boolean}>(DELETE_BOOK, { id: input.bookId })
+            await graphqlClient.request<{deleteBook: boolean}>(DELETE_BOOK, { id: input.bookId })
             return true
         } catch(error) {
             console.error('Error deleting the book!')

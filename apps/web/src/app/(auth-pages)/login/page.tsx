@@ -1,25 +1,24 @@
 'use client'
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import Image from 'next/image'
-import { Mail, Lock, ArrowRight } from 'lucide-react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { ArrowRight, Lock, Mail } from 'lucide-react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function LoginPage() {
   const [isEmailLogin, setIsEmailLogin] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const [error, setError] = useState<string | null>(null)
+  const [_, setError] = useState<string | null>(null)
 
   const router = useRouter()
   const supabase = createClientComponentClient()
 
   const handleSsoLogin = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${location.origin}/auth/callback`
@@ -36,7 +35,7 @@ export default function LoginPage() {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password
       })

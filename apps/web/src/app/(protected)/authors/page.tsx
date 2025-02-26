@@ -231,11 +231,6 @@ export default function Authors() {
                 </div>
               ))}
             </div>
-            {/* <AuthorDetailsModal
-              author={selectedAuthor}
-              isOpen={isAuthorModalOpen}
-              onClose={closeAuthorDetails}
-            /> */}
             <DeleteConfirmationModal
               isOpen={isDeleteModalOpen}
               onClose={closeDeleteModal}
