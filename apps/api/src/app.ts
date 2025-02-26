@@ -1,7 +1,7 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import express, { Request, Response } from 'express';
+import express, { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import http from 'http';
 import cors from 'cors';
 import { json } from 'body-parser';
@@ -41,7 +41,7 @@ export async function startApolloServer() {
   await server.start();
 
   const apolloMiddleware = expressMiddleware(server, {
-    context: async ({ req }: { req: Request }) => ({
+    context: async ({ req }: { req: any }) => ({
       ...createContext(),
       token: req.headers.authorization || '',
     })
@@ -54,9 +54,12 @@ export async function startApolloServer() {
     apolloMiddleware
   );
   
-  app.get('/', (req: Request, res: Response) => {
+  app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
     res.status(200).send('API is running');
   });
+
+  // No longer starting the server here - this is done in index.ts for dev
+  // and handled by Vercel in production
 
   return { app, httpServer, server };
 }
