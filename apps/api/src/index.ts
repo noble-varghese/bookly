@@ -54,13 +54,17 @@ async function startApolloServer() {
     json(),
     apolloMiddleware
   );
-
-  // Modified server startup
-  await new Promise<void>((resolve) => {
-    httpServer.listen({ port: 4000 }, resolve);
+  
+  app.get('/', (req, res) => {
+    res.status(200).send('API is running');
   });
 
-  logger.info(`🚀 Server ready at http://localhost:4000/graphql`);
+  if (process.env.NODE_ENV !== 'production') {
+    await new Promise<void>((resolve) => {
+      httpServer.listen({ port: 4000 }, resolve);
+    });
+    logger.info(`🚀 Server ready at http://localhost:4000/graphql`);
+  }
 }
 
 // Start the server with error handling
