@@ -65,28 +65,13 @@ Create a `.env` file in the root folder.
 
 **For the API (apps/api/.env):**
 ```
-DATABASE_URL=your_database_connection_string
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_KEY=your_supabase_service_key
-S3_ACCESS_KEY=your_s3_access_key
-S3_SECRET_KEY=your_s3_secret_key
-S3_BUCKET_NAME=your_s3_bucket_name
-S3_REGION=your_s3_region
-PORT=4000
-```
-
-**For the Web app (apps/web/.env.local):**
-```
-NEXT_PUBLIC_API_URL=http://localhost:4000/graphql
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ### Installation
 
 1. Clone the repository
 ```sh
-git clone https://github.com/yourusername/bookly.git
+git clone https://github.com/noble-varghese/bookly.git
 cd bookly
 ```
 
@@ -95,20 +80,18 @@ cd bookly
 pnpm install
 ```
 
-3. Start the development server
+3. Start the frontend server
 ```sh
-pnpm dev
+pnpm frontend:dev
+```
+
+4. Start the backend server
+```sh
+pnpm backend:dev
 ```
 
 This will start both the API and web application in development mode.
 
-### Building for Production
-
-```sh
-pnpm build
-```
-
-This will build both the API and web application for production.
 
 ## GraphQL Schema
 
