@@ -17,7 +17,7 @@ export class AuthorService {
         }
     }
 
-    static async getAuthors(page: number = 1, limit: number = 10): Promise<Author[]>{
+    static async getAuthors(page: number = 1, limit: number = 50): Promise<Author[]>{
         try {
             const response = await graphqlClient.request<{ authors: Author[] }>(GET_AUTHORS, { page, limit });
             return response.authors;
