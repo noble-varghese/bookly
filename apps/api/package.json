@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "NODE_ENV=production node dist/index.js",
     "clean": "rm -rf dist node_modules",
-    "vercel-build": "pnpm add pg pg-hstore --no-save",
+    "vercel-build": "pnpm add pg pg-hstore",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "keywords": [],
