@@ -1,74 +1,21 @@
-// index.ts
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import express from 'express';
-import http from 'http';
-import cors from 'cors';
-import { json } from 'body-parser';
-import { schema } from '@bookly/graphql-schema'
+import { config } from 'dotenv';
+import { startApolloServer } from './app';
 import { logger } from './utils/logger';
-import {resolvers} from './resolvers'
-import {initDatabase} from '@bookly/database'
-import { createContext } from './context';
-import { SupabaseClientInit } from './utils/supabaseClient';
 
-const typeDefs = schema
+// Load environment variables
+config({ path: '.env' });
 
-interface Context {
-  token?: string;
-}
-
-console.log('Schema content:', JSON.stringify(typeDefs));
-console.log('Resolver keys:', Object.keys(resolvers));
-if (resolvers.Query) {
-  console.log('Query resolver fields:', Object.keys(resolvers.Query));
-}
-
-async function startApolloServer() {
-  await initDatabase()
-  const app = express();
-  const httpServer = http.createServer(app);
-  SupabaseClientInit.init()
-
-  // Set up Apollo Server
-  const server = new ApolloServer<Context>({
-    typeDefs,
-    resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  });
-
-  // Start the server
-  await server.start();
-
-  const apolloMiddleware = expressMiddleware(server, {
-    context: async ({ req }) => ({
-      ...createContext(),
-      token: req.headers.authorization || '',
+// Only start the server in development mode
+// Vercel will use the serverless function in production
+if (process.env.NODE_ENV !== 'production') {
+  startApolloServer()
+    .then(({ httpServer }) => {
+      httpServer.listen({ port: 4000 }, () => {
+        logger.info(`🚀 Server ready at http://localhost:4000/graphql`);
+      });
     })
-  }) as express.RequestHandler;
-
-    app.use(
-    '/graphql',
-    cors<cors.CorsRequest>(),
-    json(),
-    apolloMiddleware
-  );
-  
-  app.get('/', (req, res) => {
-    res.status(200).send('API is running');
-  });
-
-  if (process.env.NODE_ENV !== 'production') {
-    await new Promise<void>((resolve) => {
-      httpServer.listen({ port: 4000 }, resolve);
+    .catch((err) => {
+      console.error('Error starting server:', err);
+      process.exit(1);
     });
-    logger.info(`🚀 Server ready at http://localhost:4000/graphql`);
-  }
 }
-
-// Start the server with error handling
-startApolloServer().catch((err) => {
-  console.error('Error starting server:', err);
-  process.exit(1);
-});

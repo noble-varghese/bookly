@@ -8,7 +8,8 @@
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc",
     "start": "NODE_ENV=production node dist/index.js",
-    "clean": "rm -rf dist node_modules"
+    "clean": "rm -rf dist node_modules",
+    "vercel-build": "echo HelloWorld!"
   },
   "keywords": [],
   "author": "",
