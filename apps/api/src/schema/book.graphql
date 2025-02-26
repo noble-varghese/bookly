@@ -28,6 +28,7 @@ input UpdateBookInput {
 type Query {
   books(page: Int!, limit: Int!): [Book!]!
   book(id: ID!): Book
+  getBooksByAuthor(authorId: ID!): [Book!]!
 }
 
 type Mutation {

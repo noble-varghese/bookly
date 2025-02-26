@@ -14,3 +14,18 @@ export const GET_BOOKS = gql(`
     }
   }
 `)
+
+
+export const GET_BOOKS_BY_AUTHOR = gql(`
+  query GetBooksByAuthor($authorId: ID!) {
+    getBooksByAuthor(authorId: $authorId) {
+      id
+      title
+      description
+      author {
+        name
+      }
+      coverUrl
+    }
+  }
+`)

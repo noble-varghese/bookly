@@ -123,6 +123,7 @@ export type Query = {
   authors: Array<Author>;
   book?: Maybe<Book>;
   books: Array<Book>;
+  getBooksByAuthor: Array<Book>;
   user?: Maybe<User>;
   users: Array<User>;
 };
@@ -142,6 +143,11 @@ export type QueryBookArgs = {
 export type QueryBooksArgs = {
   limit: Scalars['Int']['input'];
   page: Scalars['Int']['input'];
+};
+
+
+export type QueryGetBooksByAuthorArgs = {
+  authorId: Scalars['ID']['input'];
 };
 
 
@@ -325,6 +331,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorsArgs, 'limit' | 'page'>>;
   book?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryBookArgs, 'id'>>;
   books?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryBooksArgs, 'limit' | 'page'>>;
+  getBooksByAuthor?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryGetBooksByAuthorArgs, 'authorId'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'email'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 }>;

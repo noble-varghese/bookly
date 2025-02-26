@@ -1,11 +1,12 @@
 'use client'
-// import AuthorDetailsModal from "@/components/modals/AuthorDetailsModal";
+import AuthorDetailsModal from "@/components/modals/AuthorDetailsModal";
 import DeleteConfirmationModal from "@/components/modals/DeleteConfirmationModal";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import { AuthorService } from "@/services/api/authorService";
-import { Author } from "@/services/generated/graphql";
+import { BookService } from "@/services/api/bookService";
+import { Author, Book } from "@/services/generated/graphql";
 import { useAuthorStore } from "@/store/authorStore";
 import { Edit, Trash2, User } from "lucide-react";
 import Image from "next/image";
@@ -26,15 +27,35 @@ export default function Authors() {
   const [authorToDelete, setAuthorToDelete] = useState<Author | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [authorBooks, setAuthorBooks] = useState<Book[]>([]);
+  const [isLoadingBooks, setIsLoadingBooks] = useState(false);
 
   const { toast } = useToast()
 
   const newAuthor = useAuthorStore(state => state.newAuthor);
   const resetNewAuthor = useAuthorStore(state => state.resetNewAuthor);
 
-  const openAuthorDetails = (author: Author) => {
+  const openAuthorDetails = async (author: Author) => {
     setSelectedAuthor(author);
     setIsAuthorModalOpen(true);
+    setIsLoadingBooks(true);
+    try {
+      // Fetch books for this author
+      const books = await BookService.getBooksByAuthor(author.id);
+      setAuthorBooks(books);
+    } catch (error) {
+      console.error('Error fetching author books:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load author's books. Please try again.",
+        variant: "destructive",
+        duration: 3000,
+      });
+      setAuthorBooks([]);
+    } finally {
+      setIsLoadingBooks(false);
+      setIsAuthorModalOpen(true);
+    }
   };
 
   const closeAuthorDetails = () => {
@@ -238,6 +259,13 @@ export default function Authors() {
               isLoading={isDeleting}
               title="Delete Author"
               description={`Are you sure you want to delete "${authorToDelete?.name}"? This action cannot be undone.`}
+            />
+            <AuthorDetailsModal
+              author={selectedAuthor}
+              books={authorBooks}
+              isOpen={isAuthorModalOpen}
+              onClose={closeAuthorDetails}
+              isLoading={isLoadingBooks}
             />
 
             {hasMore && (

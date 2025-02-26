@@ -2,8 +2,10 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
 import { Book } from '@/services/generated/graphql';
 import { EditBookInput } from '@/types/book';
-import { X } from "lucide-react";
+import { X, Search, Check } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { AuthorService } from '@/services/api/authorService';
+import { Author } from '@/types/author';
 
 interface EditBookModalProps {
   isOpen: boolean;
@@ -24,13 +26,53 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
   });
   const [coverPreview, setCoverPreview] = useState<string>('');
   const [coverImage, setCoverImage] = useState<File | null>(null);
+  
+  // Author dropdown states
+  const [authors, setAuthors] = useState<Author[]>([]);
+  const [filteredAuthors, setFilteredAuthors] = useState<Author[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
+  const [isLoadingAuthors, setIsLoadingAuthors] = useState(false);
+
+  // Fetch authors on mount
+  useEffect(() => {
+    const fetchAuthors = async () => {
+      try {
+        setIsLoadingAuthors(true);
+        const fetchedAuthors = await AuthorService.getAuthors();
+        setAuthors(fetchedAuthors);
+        setFilteredAuthors(fetchedAuthors);
+      } catch (error) {
+        console.error('Failed to fetch authors:', error);
+      } finally {
+        setIsLoadingAuthors(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchAuthors();
+    }
+  }, [isOpen]);
+
+  // Filter authors based on search term
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredAuthors(authors);
+    } else {
+      const filtered = authors.filter(author => 
+        author.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredAuthors(filtered);
+    }
+  }, [searchTerm, authors]);
 
   // Initialize form data when book changes or modal opens
   useEffect(() => {
     if (book && isOpen) {
       // Format the date to YYYY-MM-DD for the date input
       const formattedDate = book.publishedDate ? 
-        new Date(book.publishedDate).toISOString() : '';
+        new Date(book.publishedDate).toISOString().split('T')[0] : '';
       
       setBookData({
         title: book.title || '',
@@ -39,6 +81,14 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
         authorId: book.author?.id || '',
         coverUrl: ''
       });
+      
+      // Set the selected author if it exists
+      if (book.author) {
+        setSelectedAuthor({
+          id: book.author.id,
+          name: book.author.name || '',
+        });
+      }
       
       setCoverImage(null);
     }
@@ -72,8 +122,18 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
       reader.readAsDataURL(file);
       
       // Clear the previous coverUrl as we'll be using the new image
-      setBookData(prev => ({ ...prev, coverUrl: '' , coverImage: file}));
+      setBookData(prev => ({ ...prev, coverUrl: '', coverImage: file}));
     }
+  };
+  
+  const handleAuthorSelect = (author: Author) => {
+    setSelectedAuthor(author);
+    setBookData({
+      ...bookData,
+      authorId: author.id
+    });
+    setIsDropdownOpen(false);
+    setSearchTerm('');
   };
   
   const handleClose = () => {
@@ -85,9 +145,7 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
     if (!book) return;
     
     // Create the final data to submit
-    const publishedDate = book.publishedDate ? 
-        new Date(book.publishedDate).toISOString() : '';
-    const finalData: EditBookInput = { ...bookData, publishedDate  };
+    const finalData: EditBookInput = { ...bookData };
     
     // Pass both the book ID and the update data to the parent
     onSubmit(book.id, finalData);
@@ -124,19 +182,67 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
                     value={bookData.title || ''}
                     onChange={(e) => setBookData({ ...bookData, title: e.target.value })}
                     className="w-full p-2 border text-bookly-textInput border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
-                    required
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-bookly-brown mb-1">
-                    Author ID
+                    Author
                   </label>
+                  <div className="relative">
+                    <div 
+                      className="w-full p-2 border text-bookly-textInput border-bookly-cream rounded-lg flex justify-between items-center cursor-pointer"
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    >
+                      <span className={selectedAuthor ? 'text-[#5A5A5A]' : 'text-gray-400'}>
+                        {selectedAuthor ? selectedAuthor.name : 'Select an author'}
+                      </span>
+                      <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                    
+                    {isDropdownOpen && (
+                      <div className="absolute z-10 mt-1 w-full bg-white border border-bookly-cream rounded-lg shadow-lg">
+                        <div className="p-2 border-b border-bookly-cream flex items-center">
+                          <Search size={16} className="text-gray-400 mr-2" />
+                          <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full p-1 focus:outline-none text-[#5A5A5A]"
+                            placeholder="Search authors..."
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                        <div className="max-h-60 overflow-y-auto">
+                          {isLoadingAuthors ? (
+                            <div className="p-3 text-center">
+                              <Spinner className="mx-auto" size="sm" />
+                            </div>
+                          ) : filteredAuthors.length > 0 ? (
+                            filteredAuthors.map(author => (
+                              <div
+                                key={author.id}
+                                className="p-2 hover:bg-gray-100 cursor-pointer flex items-center justify-between"
+                                onClick={() => handleAuthorSelect(author)}
+                              >
+                                <span className="text-[#5A5A5A]">{author.name}</span>
+                                {selectedAuthor?.id === author.id && (
+                                  <Check size={16} className="text-bookly-orange" />
+                                )}
+                              </div>
+                            ))
+                          ) : (
+                            <div className="p-3 text-center text-[#5A5A5A]">No authors found</div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <input
-                    type="text"
-                    value={bookData.authorId || ''}
-                    onChange={(e) => setBookData({ ...bookData, authorId: e.target.value })}
-                    className="w-full p-2 border text-bookly-textInput border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
+                    type="hidden"
+                    value={bookData.authorId}
                     required
                   />
                 </div>
@@ -150,7 +256,6 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
                     value={bookData.publishedDate}
                     onChange={(e) => setBookData({ ...bookData, publishedDate: e.target.value })}
                     className="w-full p-2 border text-bookly-textInput border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
-                    required
                   />
                 </div>
               </div>
@@ -164,7 +269,6 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
                     value={bookData.description || ''}
                     onChange={(e) => setBookData({ ...bookData, description: e.target.value })}
                     className="w-full p-2 border text-bookly-textInput border-bookly-cream rounded-lg h-32 resize-none focus:outline-none focus:border-bookly-orange"
-                    required
                   ></textarea>  
                 </div>
 
@@ -173,10 +277,10 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
                     Cover Image
                   </label>
                   <div className="border border-bookly-cream rounded-lg p-3">
-                    {coverPreview && (
+                    {(coverPreview || book.coverUrl) && (
                       <div className="mb-3">
                         <img 
-                          src={coverPreview} 
+                          src={coverPreview || book.coverUrl || ''} 
                           alt="Book cover preview" 
                           className="h-32 mx-auto object-contain"
                         />

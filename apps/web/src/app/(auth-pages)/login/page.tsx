@@ -66,7 +66,7 @@ export default function LoginPage() {
                 className="w-full flex items-center justify-center gap-3 p-3 border-2 border-bookly-cream rounded-xl hover:bg-bookly-cream/10 transition-colors"
               >
                 <Image
-                  src="/google-icon.svg" // Add this to your public folder
+                  src="/google-icon.svg" 
                   alt="Google"
                   width={20}
                   height={20}

@@ -5,6 +5,7 @@ export interface Author {
     bornDate: Date
     createdAt: Date
     updatedAt: Date
+    avatarUrl: string
 }
 
 export interface CreateAuthorInput {

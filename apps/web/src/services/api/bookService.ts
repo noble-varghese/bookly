@@ -7,7 +7,7 @@ import {
     DELETE_BOOK,
     UPDATE_BOOK
 } from '../mutations/book';
-import { GET_BOOKS } from '../queries/book';
+import { GET_BOOKS, GET_BOOKS_BY_AUTHOR } from '../queries/book';
 
 export class BookService {
     static async createBook(input: CreateBookInput): Promise<Book> {
@@ -26,6 +26,16 @@ export class BookService {
             console.log(input)
             const response = await graphqlClient.request<{updateBook: Book}>(UPDATE_BOOK, { id: bookId, input })
             return response.updateBook
+        } catch (error) {
+            console.error('Error fetching users:', error)
+            throw error
+        }
+    }
+
+    static async getBooksByAuthor(authorId: string): Promise<Book[]> {
+        try {
+            const response = await graphqlClient.request<{getBooksByAuthor: Book[]}>(GET_BOOKS_BY_AUTHOR, { authorId })
+            return response.getBooksByAuthor
         } catch (error) {
             console.error('Error fetching users:', error)
             throw error

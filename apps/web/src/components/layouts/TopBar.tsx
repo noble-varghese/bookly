@@ -6,16 +6,7 @@ import { Search } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-const categories = [
-  { label: "All", href: "#" },
-  { label: "Fantasy", href: "#" },
-  { label: "Drama", href: "#" },
-  { label: "Detective", href: "#" },
-  { label: "Education", href: "#" },
-  { label: "Psychology", href: "#" },
-  { label: "Business", href: "#" },
-  { label: "Astrology", href: "#" },
-]
+const categories = []
 
 interface CachedUserDetails {
   name: string;
@@ -52,7 +43,7 @@ const TopBar = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-bookly-brown/60" size={20} />
           <input
             type="text"
-            placeholder="Search name of the book or author..."
+            placeholder="Search name of the book or author... (WIP)"
             className="w-full pl-10 pr-4 py-2 rounded-full border border-bookly-cream focus:outline-none focus:border-bookly-orange"
           />
         </div>

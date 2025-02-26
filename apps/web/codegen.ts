@@ -2,7 +2,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: '../../packages/graphql-schema/src/schema/**/*.graphql', // Your GraphQL endpoint
+  schema: '../api/src/schema/**/*.graphql', // Your GraphQL endpoint
   documents: ['src/**/*.{ts,tsx}'],        // Where to look for your GraphQL operations
   generates: {
     './src/services/generated/': {

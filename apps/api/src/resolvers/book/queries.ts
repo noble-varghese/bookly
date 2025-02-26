@@ -22,5 +22,15 @@ export const queries: QueryResolvers= {
         logger.error(error)
         throw error
     }
-  }
+  },
+
+  getBooksByAuthor: async (_, {authorId}) => {
+    try {
+        logger.info('Comes for users query....')
+        return await Book.findAll({where: {authorId}});
+    } catch(error) {
+        logger.error(error)
+        throw error
+    }
+  },
 };

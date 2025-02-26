@@ -24,6 +24,7 @@ type Documents = {
     "\n  mutation DeleteUser($id: ID!) {\n    deleteUser(id: $id)\n  }\n": typeof types.DeleteUserDocument,
     "\n  query GetAuthors($page: Int!, $limit: Int!) {\n    authors(page: $page, limit: $limit) {\n        id\n        biography\n        name\n        books {\n            id\n            title\n        }\n        avatarUrl\n        biography\n    }\n  }\n": typeof types.GetAuthorsDocument,
     "\n  query GetBooks($page: Int!, $limit: Int!) {\n    books(page: $page, limit: $limit) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n": typeof types.GetBooksDocument,
+    "\n  query GetBooksByAuthor($authorId: ID!) {\n    getBooksByAuthor(authorId: $authorId) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n": typeof types.GetBooksByAuthorDocument,
     "\n  query GetUsers {\n    users {\n      id\n      name\n      email\n    }\n  }\n": typeof types.GetUsersDocument,
     "\n    query GetUserByEmail($email: String!) {\n      user(email: $email) {\n        id\n        name\n        email\n      }\n    }\n  ": typeof types.GetUserByEmailDocument,
 };
@@ -38,6 +39,7 @@ const documents: Documents = {
     "\n  mutation DeleteUser($id: ID!) {\n    deleteUser(id: $id)\n  }\n": types.DeleteUserDocument,
     "\n  query GetAuthors($page: Int!, $limit: Int!) {\n    authors(page: $page, limit: $limit) {\n        id\n        biography\n        name\n        books {\n            id\n            title\n        }\n        avatarUrl\n        biography\n    }\n  }\n": types.GetAuthorsDocument,
     "\n  query GetBooks($page: Int!, $limit: Int!) {\n    books(page: $page, limit: $limit) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n": types.GetBooksDocument,
+    "\n  query GetBooksByAuthor($authorId: ID!) {\n    getBooksByAuthor(authorId: $authorId) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n": types.GetBooksByAuthorDocument,
     "\n  query GetUsers {\n    users {\n      id\n      name\n      email\n    }\n  }\n": types.GetUsersDocument,
     "\n    query GetUserByEmail($email: String!) {\n      user(email: $email) {\n        id\n        name\n        email\n      }\n    }\n  ": types.GetUserByEmailDocument,
 };
@@ -96,6 +98,10 @@ export function gql(source: "\n  query GetAuthors($page: Int!, $limit: Int!) {\n
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetBooks($page: Int!, $limit: Int!) {\n    books(page: $page, limit: $limit) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n"): (typeof documents)["\n  query GetBooks($page: Int!, $limit: Int!) {\n    books(page: $page, limit: $limit) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetBooksByAuthor($authorId: ID!) {\n    getBooksByAuthor(authorId: $authorId) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n"): (typeof documents)["\n  query GetBooksByAuthor($authorId: ID!) {\n    getBooksByAuthor(authorId: $authorId) {\n      id\n      title\n      description\n      author {\n        name\n      }\n      coverUrl\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
