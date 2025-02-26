@@ -40,8 +40,8 @@ const euclidCircularB = localFont({
 })
 
 export const metadata: Metadata = {
-  title: "Your App Name",
-  description: "Your app description",
+  title: "Bookly",
+  description: "A simple library application",
 };
 
 export default function RootLayout({
