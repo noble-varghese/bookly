@@ -6,9 +6,9 @@ import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
 import http from 'http';
 import cors from 'cors';
 import { json } from 'body-parser';
-import { schema } from '@bookly/graphql-schema';
+import { schema } from './context';
 import { resolvers } from './resolvers';
-import { initDatabase } from '@bookly/database';
+import { initDatabase } from '../src/config/database';
 import { createContext } from './context';
 import { SupabaseClientInit } from './utils/supabaseClient';
 

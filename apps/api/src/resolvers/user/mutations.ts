@@ -1,5 +1,5 @@
-import { MutationResolvers } from '@bookly/graphql-schema/src/types/generated';
-import { User, UserAttributes} from '@bookly/database';
+import { MutationResolvers } from '../../types/generated';
+import { User, UserAttributes} from '../../models';
 import { logger } from '../../utils/logger';
 
 export const mutations: MutationResolvers = {

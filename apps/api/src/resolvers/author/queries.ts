@@ -1,5 +1,5 @@
-import { QueryResolvers } from '@bookly/graphql-schema/src/types/generated';
-import { Author, Book } from '@bookly/database';
+import { QueryResolvers } from '../../types/generated';
+import { Author, Book } from '../../models';
 import { logger } from '../../utils/logger';
 
 export const queries: QueryResolvers= {

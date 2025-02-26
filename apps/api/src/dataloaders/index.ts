@@ -1,6 +1,6 @@
 // src/dataloaders/index.ts
 import DataLoader from 'dataloader';
-import { Author, Book } from '@bookly/database';
+import { Author, Book } from '../models';
 
 export const createLoaders = () => ({
   authorLoader: new DataLoader(async (ids: readonly string[]) => {

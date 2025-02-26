@@ -1,4 +1,4 @@
-import { Resolvers } from '@bookly/graphql-schema/src/types/generated';
+import { Resolvers } from '../../types/generated';
 import { mutations } from './mutations';
 import { queries } from './queries';
 

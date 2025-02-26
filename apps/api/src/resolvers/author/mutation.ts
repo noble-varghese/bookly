@@ -1,5 +1,5 @@
-import { Author, } from '@bookly/database';
-import { MutationResolvers } from '@bookly/graphql-schema/src/types/generated';
+import { Author, } from '../../models';
+import { MutationResolvers } from '../../types/generated';
 import { Context } from '../../context';
 import { logger } from '../../utils/logger';
 

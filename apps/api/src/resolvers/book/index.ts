@@ -1,5 +1,5 @@
 // src/resolvers/book/index.ts
-import { Resolvers } from '@bookly/graphql-schema/src/types/generated';
+import { Resolvers } from '../../types/generated';
 import { Context } from '../../context';
 import { mutations } from './mutation';
 import { queries } from './queries';

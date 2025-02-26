@@ -32,12 +32,6 @@ importers:
       '@apollo/server':
         specifier: ^4.9.0
         version: 4.11.3(graphql@16.10.0)
-      '@bookly/database':
-        specifier: workspace:*
-        version: link:../../packages/database
-      '@bookly/graphql-schema':
-        specifier: workspace:*
-        version: link:../../packages/graphql-schema
       '@supabase/supabase-js':
         specifier: ^2.48.1
         version: 2.48.1
@@ -108,6 +102,12 @@ importers:
         specifier: ^5.1.6
         version: 5.7.3
     devDependencies:
+      '@graphql-tools/load-files':
+        specifier: ^7.0.1
+        version: 7.0.1(graphql@16.10.0)
+      '@graphql-tools/merge':
+        specifier: ^9.0.19
+        version: 9.0.19(graphql@16.10.0)
       '@types/body-parser':
         specifier: ^1.19.5
         version: 1.19.5
