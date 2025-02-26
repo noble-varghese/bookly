@@ -18,7 +18,7 @@ export const mutations: MutationResolvers = {
     }
   },
 
-  deleteAuthor: async (__dirname, {id}) => {
+  deleteAuthor: async (_, {id}) => {
     try {
       await Author.destroy({where: {id}})
       return true
@@ -26,5 +26,31 @@ export const mutations: MutationResolvers = {
       logger.error(error)
       throw new Error('Failed to delete the book!')
     }
-  }
+  },
+   updateAuthor: async(_, {id, input}) => {
+    try {
+      const existingBook = await Author.findByPk(id);
+  
+      if (!existingBook) {
+        throw new Error(`Book with ID ${id} not found`);
+      }
+
+      const data: any = {}
+      if (input.name)  data['name'] = input.name
+      if (input.bornDate)  data['bornDate'] = input.bornDate
+      if (input.biography)  data['biography'] = input.biography
+      if (input.avatarUrl)  data['avatarUrl'] = input.avatarUrl
+
+      await Author.update({
+        ...data
+      }, {where: {id}})
+
+      const author = await Author.findByPk(id) || {}
+      return author
+    }catch(error) {
+      logger.error(error)
+      throw new Error('Failed to delete the book!')
+    }
+   }
+  
 };

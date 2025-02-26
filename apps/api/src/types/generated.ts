@@ -72,6 +72,7 @@ export type Mutation = {
   deleteAuthor: Scalars['Boolean']['output'];
   deleteBook: Scalars['Boolean']['output'];
   deleteUser: Scalars['Boolean']['output'];
+  updateAuthor: Author;
   updateBook: Book;
   updateUser: User;
 };
@@ -104,6 +105,12 @@ export type MutationDeleteBookArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateAuthorArgs = {
+  id: Scalars['ID']['input'];
+  input: UpdateAuthorInput;
 };
 
 
@@ -153,6 +160,13 @@ export type QueryGetBooksByAuthorArgs = {
 
 export type QueryUserArgs = {
   email: Scalars['String']['input'];
+};
+
+export type UpdateAuthorInput = {
+  avatarUrl?: InputMaybe<Scalars['String']['input']>;
+  biography?: InputMaybe<Scalars['String']['input']>;
+  bornDate?: InputMaybe<Scalars['DateTime']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateBookInput = {
@@ -262,6 +276,7 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Partial<Scalars['String']['output']>>;
+  UpdateAuthorInput: ResolverTypeWrapper<Partial<UpdateAuthorInput>>;
   UpdateBookInput: ResolverTypeWrapper<Partial<UpdateBookInput>>;
   UpdateUserInput: ResolverTypeWrapper<Partial<UpdateUserInput>>;
   Upload: ResolverTypeWrapper<Partial<Scalars['Upload']['output']>>;
@@ -282,6 +297,7 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   Query: {};
   String: Partial<Scalars['String']['output']>;
+  UpdateAuthorInput: Partial<UpdateAuthorInput>;
   UpdateBookInput: Partial<UpdateBookInput>;
   UpdateUserInput: Partial<UpdateUserInput>;
   Upload: Partial<Scalars['Upload']['output']>;
@@ -323,6 +339,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteAuthor?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteAuthorArgs, 'id'>>;
   deleteBook?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteBookArgs, 'id'>>;
   deleteUser?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  updateAuthor?: Resolver<ResolversTypes['Author'], ParentType, ContextType, RequireFields<MutationUpdateAuthorArgs, 'id' | 'input'>>;
   updateBook?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<MutationUpdateBookArgs, 'id' | 'input'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id' | 'input'>>;
 }>;
