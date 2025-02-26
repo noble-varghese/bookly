@@ -19,7 +19,7 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
   const [bookData, setBookData] = useState<EditBookInput>({
     title: '',
     description: '',
-    publishedDate: '',
+    publishedDate: '1925-04-10T00:00:00Z',
     authorId: '',
     coverUrl: '',
     coverImage: null

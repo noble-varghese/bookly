@@ -148,6 +148,7 @@ export default function Home() {
         updateData.coverUrl = coverUrl
       }
       console.log(updateData)
+      delete updateData.coverImage
       const updatedBook = await BookService.updateBook(bookId, updateData)
       
       setPopularBooks(prev => 
