@@ -16,6 +16,14 @@ export interface CreateAuthorInput {
     avatarImage: File | null
 }
 
+export interface UpdateAuthorInput {
+    name: string;
+    biography: string;
+    bornDate: string;
+    avatarUrl: string;
+    avatarImage?: File | null
+}
+
 
 export interface DeleteAuthorInput {
     authorId: string

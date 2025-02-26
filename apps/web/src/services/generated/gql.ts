@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 type Documents = {
     "\n  mutation CreateAuthor($input: CreateAuthorInput!) {\n    createAuthor(input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n": typeof types.CreateAuthorDocument,
+    "\n  mutation UpdateAuthor($id: ID!, $input: UpdateAuthorInput!) {\n    updateAuthor(id: $id, input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n": typeof types.UpdateAuthorDocument,
     "\n    mutation DeleteAuthor($id: ID!) {\n        deleteAuthor(id: $id)\n    }\n": typeof types.DeleteAuthorDocument,
     "\n  mutation CreateBook($input: CreateBookInput!) {\n    createBook(input: $input) {\n      id\n      title\n      description\n      publishedDate\n      author {\n        id\n        name\n      }\n      coverUrl\n    }\n  }\n\n": typeof types.CreateBookDocument,
     "\n  mutation UpdateBook($id: ID!, $input: UpdateBookInput!) {\n    updateBook(id: $id, input: $input) {\n      id\n      title\n      description\n      publishedDate\n      coverUrl\n      author {\n        id\n        name\n      }\n    }\n  }\n": typeof types.UpdateBookDocument,
@@ -30,6 +31,7 @@ type Documents = {
 };
 const documents: Documents = {
     "\n  mutation CreateAuthor($input: CreateAuthorInput!) {\n    createAuthor(input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n": types.CreateAuthorDocument,
+    "\n  mutation UpdateAuthor($id: ID!, $input: UpdateAuthorInput!) {\n    updateAuthor(id: $id, input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n": types.UpdateAuthorDocument,
     "\n    mutation DeleteAuthor($id: ID!) {\n        deleteAuthor(id: $id)\n    }\n": types.DeleteAuthorDocument,
     "\n  mutation CreateBook($input: CreateBookInput!) {\n    createBook(input: $input) {\n      id\n      title\n      description\n      publishedDate\n      author {\n        id\n        name\n      }\n      coverUrl\n    }\n  }\n\n": types.CreateBookDocument,
     "\n  mutation UpdateBook($id: ID!, $input: UpdateBookInput!) {\n    updateBook(id: $id, input: $input) {\n      id\n      title\n      description\n      publishedDate\n      coverUrl\n      author {\n        id\n        name\n      }\n    }\n  }\n": types.UpdateBookDocument,
@@ -62,6 +64,10 @@ export function gql(source: string): unknown;
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation CreateAuthor($input: CreateAuthorInput!) {\n    createAuthor(input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n"): (typeof documents)["\n  mutation CreateAuthor($input: CreateAuthorInput!) {\n    createAuthor(input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation UpdateAuthor($id: ID!, $input: UpdateAuthorInput!) {\n    updateAuthor(id: $id, input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateAuthor($id: ID!, $input: UpdateAuthorInput!) {\n    updateAuthor(id: $id, input: $input) {\n      id\n      name\n      biography\n      avatarUrl\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,13 +1,16 @@
 'use client'
 import AuthorDetailsModal from "@/components/modals/AuthorDetailsModal";
 import DeleteConfirmationModal from "@/components/modals/DeleteConfirmationModal";
+import EditAuthorModal from "@/components/modals/EditAuthorModal";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useToast } from "@/components/ui/use-toast";
 import { AuthorService } from "@/services/api/authorService";
 import { BookService } from "@/services/api/bookService";
+import { CdnStoreService } from "@/services/api/commonService";
 import { Author, Book } from "@/services/generated/graphql";
 import { useAuthorStore } from "@/store/authorStore";
+import { UpdateAuthorInput } from "@/types/author";
 import { Edit, Trash2, User } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -23,7 +26,8 @@ export default function Authors() {
   const initialFetchDone = useRef(false);
   const [selectedAuthor, setSelectedAuthor] = useState<Author | null>(null);
   const [isAuthorModalOpen, setIsAuthorModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // New state for edit modal
+  const [isUpdating, setIsUpdating] = useState(false); // New state for update loading
   const [authorToDelete, setAuthorToDelete] = useState<Author | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -127,11 +131,56 @@ export default function Authors() {
     }
   }, [newAuthor, resetNewAuthor]);
 
-  const handleEditAuthor = (author: Author) => {
+
+  const handleEditAuthor = (author: Author, e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('Edit button clicked for author:', author.name);
     setSelectedAuthor(author);
-    setIsEditMode(true);
-    // TODO: Implement edit author logic
-    console.log('Editing author:', author);
+    setIsEditModalOpen(true);
+  };
+
+  // New handler for author updates
+  const handleUpdateAuthor = async (authorId: string, authorData: UpdateAuthorInput) => {
+    try {
+      setIsUpdating(true);
+      if (authorData.avatarImage) {
+        const coverUrl = await CdnStoreService.uploadImage(authorData.avatarImage)
+        authorData.avatarUrl = coverUrl
+      }
+      delete authorData.avatarImage
+      console.log(authorData)
+      const updatedAuthor = await AuthorService.updateAuthor(authorId, authorData);
+
+      console.log('updatedAuthor: ')
+      console.log(updatedAuthor)
+      
+      // Update the author in the list
+      setPopularAuthors(prev => 
+        prev.map(author => 
+          author.id === authorId ? { ...author, ...updatedAuthor } : author
+        )
+      );
+
+      setIsEditModalOpen(false);
+      
+      toast({
+        title: "Success!",
+        description: "Author has been updated successfully.",
+        variant: "default",
+        duration: 3000,
+        className: "bg-bookly-bg text-bookly-brown"
+      });
+    } catch (error) {
+      console.error('Error updating author:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update the author. Please try again.",
+        variant: "destructive",
+        duration: 3000,
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   const openDeleteModal = (author: Author) => {
@@ -230,7 +279,7 @@ export default function Authors() {
                         className="bg-white/80 hover:bg-white/90 w-8 h-8 p-1 rounded-full"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleEditAuthor(author);
+                          handleEditAuthor(author, e);
                         }}
                       >
                         <Edit className="w-4 h-4 text-bookly-brown" />
@@ -252,6 +301,7 @@ export default function Authors() {
                 </div>
               ))}
             </div>
+            
             <DeleteConfirmationModal
               isOpen={isDeleteModalOpen}
               onClose={closeDeleteModal}
@@ -260,12 +310,21 @@ export default function Authors() {
               title="Delete Author"
               description={`Are you sure you want to delete "${authorToDelete?.name}"? This action cannot be undone.`}
             />
+            
             <AuthorDetailsModal
               author={selectedAuthor}
               books={authorBooks}
               isOpen={isAuthorModalOpen}
               onClose={closeAuthorDetails}
               isLoading={isLoadingBooks}
+            />
+            
+            <EditAuthorModal
+              author={selectedAuthor}
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              onSubmit={handleUpdateAuthor}
+              isLoading={isUpdating}
             />
 
             {hasMore && (

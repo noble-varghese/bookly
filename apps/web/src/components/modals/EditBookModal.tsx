@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
-import { Book } from '@/services/generated/graphql';
-import { EditBookInput } from '@/types/book';
-import { X, Search, Check } from "lucide-react";
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { AuthorService } from '@/services/api/authorService';
-import { Author } from '@/types/author';
+import { Author, Book } from '@/services/generated/graphql';
+import { EditBookInput } from '@/types/book';
+import { Check, Search, X } from "lucide-react";
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+
 
 interface EditBookModalProps {
   isOpen: boolean;
@@ -84,10 +84,7 @@ const EditBookModal = ({ isOpen, onClose, onSubmit, isLoading = false, book }: E
       
       // Set the selected author if it exists
       if (book.author) {
-        setSelectedAuthor({
-          id: book.author.id,
-          name: book.author.name || '',
-        });
+        setSelectedAuthor(book.author);
       }
       
       setCoverImage(null);

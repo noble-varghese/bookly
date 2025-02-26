@@ -13,6 +13,18 @@ export const CREATE_AUTHOR = gql(`
 `)
 
 
+export const UPDATE_AUTHOR = gql(`
+  mutation UpdateAuthor($id: ID!, $input: UpdateAuthorInput!) {
+    updateAuthor(id: $id, input: $input) {
+      id
+      name
+      biography
+      avatarUrl
+    }
+  }
+`)
+
+
 export const DELETE_AUTHOR = gql(`
     mutation DeleteAuthor($id: ID!) {
         deleteAuthor(id: $id)

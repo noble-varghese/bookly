@@ -1,8 +1,8 @@
 // src/services/api/userService.ts
 import { DeleteBookInput } from '@/types/book';
 import { graphqlClient } from '../client';
-import { Author, CreateAuthorInput } from '../generated/graphql';
-import { CREATE_AUTHOR, DELETE_AUTHOR } from '../mutations/author';
+import { Author, CreateAuthorInput, UpdateAuthorInput } from '../generated/graphql';
+import { CREATE_AUTHOR, DELETE_AUTHOR, UPDATE_AUTHOR } from '../mutations/author';
 import { GET_AUTHORS } from '../queries/author';
 import { DeleteAuthorInput } from '@/types/author';
 
@@ -33,6 +33,18 @@ export class AuthorService {
             return response.deleteAuthor
         } catch(error) {
             console.error('Error deleting the book!')
+            throw error
+        }
+    }
+
+    static async updateAuthor(id:string, input: UpdateAuthorInput): Promise<Author> {
+        try {
+            console.log(input)
+
+            const response = await graphqlClient.request<{ updateAuthor: Author }>(UPDATE_AUTHOR, { id, input });
+            return response.updateAuthor;
+        } catch (error) {
+            console.error('Error fetching users:', error)
             throw error
         }
     }
