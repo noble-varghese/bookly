@@ -3,10 +3,17 @@
     "buildCommand": "cd ../../ && pnpm install:ordered && pnpm turbo run build --filter=@bookly/api...",
     "installCommand": "pnpm install && pnpm install --dev",
     "outputDirectory": "dist",
+    "builds": [
+        {
+            "src": "dist/index.js",
+            "use": "@vercel/node",
+            "config": { "includeFiles": ["dist/**"] }
+        }
+    ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "/dist/index.js"
+            "dest": "dist/index.js"
         }
     ]
 }
