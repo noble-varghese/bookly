@@ -1,7 +1,8 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import express, { Request as ExpressRequest, Response as ExpressResponse } from 'express';
+import express from 'express';
+import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import http from 'http';
 import cors from 'cors';
 import { json } from 'body-parser';
@@ -54,7 +55,7 @@ export async function startApolloServer() {
     apolloMiddleware
   );
   
-  app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
+  app.get('/', (req: any, res: any) => {
     res.status(200).send('API is running');
   });
 
