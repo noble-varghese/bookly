@@ -12,7 +12,7 @@ const config: CodegenConfig = {
         enumsAsTypes: true,
         useIndexSignature: true,
         mappers: {
-          User: '@bookly/database#UserModel' // Make sure this matches your actual model export
+          User: '@bookly/database#User' // Make sure this matches your actual model export
         },
         defaultMapper: 'Partial<{T}>',
       }

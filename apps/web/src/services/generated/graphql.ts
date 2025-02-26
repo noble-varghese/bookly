@@ -119,18 +119,11 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  author?: Maybe<Author>;
   authors: Array<Author>;
   book?: Maybe<Book>;
   books: Array<Book>;
-  booksByAuthor: Array<Book>;
   user?: Maybe<User>;
   users: Array<User>;
-};
-
-
-export type QueryAuthorArgs = {
-  id: Scalars['ID']['input'];
 };
 
 
@@ -148,11 +141,6 @@ export type QueryBookArgs = {
 export type QueryBooksArgs = {
   limit: Scalars['Int']['input'];
   page: Scalars['Int']['input'];
-};
-
-
-export type QueryBooksByAuthorArgs = {
-  authorId: Scalars['ID']['input'];
 };
 
 

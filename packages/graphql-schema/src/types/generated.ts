@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { UserModel } from '@bookly/database';
+import { User } from '@bookly/database';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -120,18 +120,11 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  author?: Maybe<Author>;
   authors: Array<Author>;
   book?: Maybe<Book>;
   books: Array<Book>;
-  booksByAuthor: Array<Book>;
   user?: Maybe<User>;
   users: Array<User>;
-};
-
-
-export type QueryAuthorArgs = {
-  id: Scalars['ID']['input'];
 };
 
 
@@ -149,11 +142,6 @@ export type QueryBookArgs = {
 export type QueryBooksArgs = {
   limit: Scalars['Int']['input'];
   page: Scalars['Int']['input'];
-};
-
-
-export type QueryBooksByAuthorArgs = {
-  authorId: Scalars['ID']['input'];
 };
 
 
@@ -271,7 +259,7 @@ export type ResolversTypes = ResolversObject<{
   UpdateBookInput: ResolverTypeWrapper<Partial<UpdateBookInput>>;
   UpdateUserInput: ResolverTypeWrapper<Partial<UpdateUserInput>>;
   Upload: ResolverTypeWrapper<Partial<Scalars['Upload']['output']>>;
-  User: ResolverTypeWrapper<UserModel>;
+  User: ResolverTypeWrapper<User>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -291,7 +279,7 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateBookInput: Partial<UpdateBookInput>;
   UpdateUserInput: Partial<UpdateUserInput>;
   Upload: Partial<Scalars['Upload']['output']>;
-  User: UserModel;
+  User: User;
 }>;
 
 export type AuthorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = ResolversObject<{
@@ -334,11 +322,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorArgs, 'id'>>;
   authors?: Resolver<Array<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorsArgs, 'limit' | 'page'>>;
   book?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryBookArgs, 'id'>>;
   books?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryBooksArgs, 'limit' | 'page'>>;
-  booksByAuthor?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<QueryBooksByAuthorArgs, 'authorId'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'email'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
 }>;

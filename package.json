@@ -16,7 +16,8 @@
     "front-end:codegen": "pnpm --filter graphql-schema codegen",
     "build:api": "turbo run build --filter=@bookly/api",
     "build:schema": "turbo run build --filter=@bookly/graphql-schema",
-    "api:start": "pnpm dotenv -- pnpm --filter api start"
+    "api:start": "pnpm dotenv -- pnpm --filter api start",
+    "clean:declarations": "find . -name \"*.d.ts\" -not -path \"*/node_modules/*\" -delete"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.5",

@@ -9,16 +9,6 @@ type Book {
     updatedAt: DateTime! 
 }
 
-type Author {
-  id: ID!
-  name: String!
-  biography: String!
-  bornDate: DateTime!
-  books: [Book!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 input CreateBookInput {
   title: String!
   description: String!
@@ -38,7 +28,6 @@ input UpdateBookInput {
 type Query {
   books(page: Int!, limit: Int!): [Book!]!
   book(id: ID!): Book
-  booksByAuthor(authorId: ID!): [Book!]!
 }
 
 type Mutation {
@@ -46,6 +35,3 @@ type Mutation {
   updateBook(id: ID!, input: UpdateBookInput!): Book!
   deleteBook(id: ID!): Boolean!
 }
-
-scalar DateTime
-scalar Upload

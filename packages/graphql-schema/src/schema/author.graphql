@@ -16,15 +16,11 @@ input CreateAuthorInput {
     avatarUrl: String
 }
 
-
 type Query {
   authors(page: Int!, limit: Int!): [Author!]!
-  author(id: ID!): Author
 }
 
 type Mutation {
     createAuthor(input: CreateAuthorInput!): Author!
     deleteAuthor(id: ID!): Boolean!
 }
-
-scalar DateTime

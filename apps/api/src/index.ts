@@ -19,6 +19,12 @@ interface Context {
   token?: string;
 }
 
+console.log('Schema content:', JSON.stringify(typeDefs));
+console.log('Resolver keys:', Object.keys(resolvers));
+if (resolvers.Query) {
+  console.log('Query resolver fields:', Object.keys(resolvers.Query));
+}
+
 async function startApolloServer() {
   await initDatabase()
   const app = express();
