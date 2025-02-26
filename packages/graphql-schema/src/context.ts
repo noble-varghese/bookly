@@ -1,9 +1,9 @@
 import { UserModel } from '@bookly/database';
 import { Request } from 'express';
-import { DataLoaders } from './dataloaders';
+import DataLoader from 'dataloader';
 
 export interface Context {
   user?: UserModel;
   req: Request;
-  loaders: DataLoaders;
+  loaders: {};
 }

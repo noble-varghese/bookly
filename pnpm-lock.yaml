@@ -297,27 +297,6 @@ importers:
         specifier: ^6.6.2
         version: 6.6.2
 
-  packages/graphql-client:
-    dependencies:
-      '@graphql-codegen/cli':
-        specifier: ^5.0.5
-        version: 5.0.5(@types/node@20.17.19)(graphql@16.10.0)(typescript@5.7.3)
-      '@graphql-codegen/typescript':
-        specifier: ^4.1.4
-        version: 4.1.4(graphql@16.10.0)
-      '@graphql-codegen/typescript-operations':
-        specifier: ^4.5.0
-        version: 4.5.0(graphql@16.10.0)
-      '@graphql-codegen/typescript-react-apollo':
-        specifier: ^4.3.2
-        version: 4.3.2(graphql@16.10.0)
-      dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
-      graphql:
-        specifier: ^16.10.0
-        version: 16.10.0
-
   packages/graphql-schema:
     dependencies:
       '@graphql-tools/load-files':
@@ -326,9 +305,15 @@ importers:
       '@graphql-tools/merge':
         specifier: ^9.0.19
         version: 9.0.19(graphql@16.10.0)
+      dataloader:
+        specifier: ^2.2.3
+        version: 2.2.3
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      express:
+        specifier: ^4.18.2
+        version: 4.21.2
     devDependencies:
       '@bookly/database':
         specifier: workspace:*
@@ -345,6 +330,9 @@ importers:
       '@graphql-codegen/typescript-resolvers':
         specifier: ^4.0.0
         version: 4.4.3(graphql@16.10.0)
+      '@types/express':
+        specifier: ^4.17.17
+        version: 4.17.21
       graphql:
         specifier: ^16.0.0
         version: 16.10.0
@@ -926,12 +914,6 @@ packages:
   '@graphql-codegen/typescript-operations@4.5.0':
     resolution: {integrity: sha512-HIu9xB124MVAD1TTGM+iDeJbxtmm0dOolgEEr2uPEBH89i3ggmy+NsXGt7TrOQVDKumv5Df+6DTb59Hmc1qY7g==}
     engines: {node: '>=16'}
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-
-  '@graphql-codegen/typescript-react-apollo@4.3.2':
-    resolution: {integrity: sha512-io2tWfeehBqOB2X6llqLE6B9wjjsXZT/GTZlguGVXdbR7WhSJO9GXyLflXYKxom/h2bPjkVL534Ev6wZLcs0wA==}
-    engines: {node: '>= 16.0.0'}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
 
@@ -6287,18 +6269,6 @@ snapshots:
       tslib: 2.6.3
     transitivePeerDependencies:
       - encoding
-
-  '@graphql-codegen/typescript-react-apollo@4.3.2(graphql@16.10.0)':
-    dependencies:
-      '@graphql-codegen/plugin-helpers': 3.1.2(graphql@16.10.0)
-      '@graphql-codegen/visitor-plugin-common': 2.13.1(graphql@16.10.0)
-      auto-bind: 4.0.0
-      change-case-all: 1.0.15
-      graphql: 16.10.0
-      tslib: 2.6.3
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
 
   '@graphql-codegen/typescript-resolvers@4.4.3(graphql@16.10.0)':
     dependencies:

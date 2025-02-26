@@ -15,15 +15,18 @@
   "dependencies": {
     "@graphql-tools/load-files": "^7.0.1",
     "@graphql-tools/merge": "^9.0.19",
-    "dotenv": "^16.4.7"
+    "dataloader": "^2.2.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.2"
   },
   "devDependencies": {
     "@bookly/database": "workspace:*",
-    "typescript": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.0",
-    "@graphql-codegen/typescript-resolvers": "^4.0.0",
     "@graphql-codegen/typescript-operations": "^4.0.0",
-    "graphql": "^16.0.0"
+    "@graphql-codegen/typescript-resolvers": "^4.0.0",
+    "@types/express": "^4.17.17",
+    "graphql": "^16.0.0",
+    "typescript": "^5.0.0"
   }
 }

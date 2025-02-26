@@ -13,7 +13,9 @@
     "frontend:dev": "pnpm dotenv -- pnpm --filter web dev",
     "migrate:up": "pnpm dotenv -- pnpm sequelize-cli db:migrate",
     "backend:codegen": "pnpm --filter graphql-schema codegen",
-    "front-end:codegen": "pnpm --filter graphql-schema codegen"
+    "front-end:codegen": "pnpm --filter graphql-schema codegen",
+    "build:api": "turbo run build --filter=@bookly/api",
+    "build:schema": "turbo run build --filter=@bookly/graphql-schema"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.5",

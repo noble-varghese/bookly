@@ -1,15 +1,15 @@
 {
     "compilerOptions": {
-      "target": "es2017",
-      "module": "commonjs",
-      "outDir": "./dist",
       "rootDir": "./src",
+      "outDir": "./dist",
+      "target": "ES2022",
+      "module": "commonjs",
       "strict": true,
       "esModuleInterop": true,
       "declaration": true,
       "skipLibCheck": true,
       "resolveJsonModule": true
     },
-    "include": ["src/**/*", "../../apps/api/src/resolvers"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]
   }
