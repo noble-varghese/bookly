@@ -38,7 +38,7 @@ export const mutations: MutationResolvers = {
       if (input.authorId)  data['authorId'] = input.authorId
       if (input.description)  data['description'] = input.description
       if (input.publishedDate)  data['publishedDate'] = input.publishedDate
-      if (input.coverUrl)  data['publishedDate'] = input.coverUrl
+      if (input.coverUrl)  data['coverUrl'] = input.coverUrl
       
       await Book.update({
         ...data
