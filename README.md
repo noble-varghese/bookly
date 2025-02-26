@@ -1,84 +1,161 @@
-# Turborepo starter
+# Bookly
 
-This Turborepo starter is maintained by the Turborepo core team.
+Bookly is a fullstack application that allows users to manage books and authors. The application provides complete CRUD (Create, Read, Update, Delete) operations for both books and authors, with authentication handled by Supabase and image storage using supabase storage.
 
-## Using this example
+## Features
 
-Run the following command:
+- 📚 Complete book management (add, edit, delete, view details)
+- ✍️ Author management with CRUD operations
+- 🔐 Authentication via Supabase
+- 📷 Image upload capabilities for books and authors
+- 💾 S3 compatible storage for managing uploaded images
+- 📱 Responsive UI built with shadcn components and lucide-react
 
+## Project Structure
+
+This project is built as a Turborepo monorepo with the following structure:
+
+```
+bookly/
+├── apps/
+│   ├── api/               # Apollo GraphQL server
+│   │   ├── src/
+│   │   │   ├── schema/    # GraphQL schema definitions
+│   │   │   ├── resolvers/ # Query and mutation resolvers
+│   │   │   └── ...
+│   └── web/               # Next.js frontend application
+│       ├── components/    # Reusable UI components
+│       ├── pages/         # Next.js pages
+│       ├── lib/           # Utility functions and configs
+│       └── ...
+└── ...
+```
+
+## Tech Stack
+
+### Backend (`apps/api`)
+- TypeScript
+- Apollo Server
+- GraphQL
+- Supabase (Authentication)
+- Supabase S3 store (Image Storage)
+
+
+### Frontend (`apps/web`)
+- Next.js
+- TypeScript
+- Apollo Client (GraphQL)
+- shadcn/ui components
+- lucide-react icons
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (latest version 20+)
+- pnpm package manager
+
+### Environment Variables
+
+Create a `.env` file in the root folder.
+
+**For the API (apps/api/.env):**
+```
+DATABASE_URL=your_database_connection_string
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_KEY=your_supabase_service_key
+S3_ACCESS_KEY=your_s3_access_key
+S3_SECRET_KEY=your_s3_secret_key
+S3_BUCKET_NAME=your_s3_bucket_name
+S3_REGION=your_s3_region
+PORT=4000
+```
+
+**For the Web app (apps/web/.env.local):**
+```
+NEXT_PUBLIC_API_URL=http://localhost:4000/graphql
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### Installation
+
+1. Clone the repository
 ```sh
-npx create-turbo@latest
+git clone https://github.com/yourusername/bookly.git
+cd bookly
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+2. Install dependencies
+```sh
+pnpm install
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
+3. Start the development server
+```sh
 pnpm dev
 ```
 
-### Remote Caching
+This will start both the API and web application in development mode.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Building for Production
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+```sh
+pnpm build
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+This will build both the API and web application for production.
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## GraphQL Schema
 
-```
-npx turbo link
-```
+The API uses a modular GraphQL schema approach with files located in the `apps/api/src/schema` directory.
 
-## Useful Links
+### Main Types
 
-Learn more about the power of Turborepo:
+- `Book`: Represents book data, including title, description, cover image, and author reference
+- `Author`: Contains author information, including name, bio, and profile image
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+### Queries
+
+- `books`: Fetch all books
+- `book(id: ID!)`: Fetch a specific book by ID
+- `authors`: Fetch all authors
+- `author(id: ID!)`: Fetch a specific author by ID
+
+### Mutations
+
+- Book operations:
+  - `createBook`: Add a new book
+  - `updateBook`: Update an existing book
+  - `deleteBook`: Remove a book
+- Author operations:
+  - `createAuthor`: Add a new author
+  - `updateAuthor`: Update an existing author
+  - `deleteAuthor`: Remove an author
+- Image operations:
+  - `uploadBookCover`: Upload a cover image for a book
+  - `uploadAuthorImage`: Upload a profile image for an author
+
+## Frontend Components
+
+The web application uses a component-based architecture with shadcn UI components and lucide-react icons for a clean, responsive interface.
+
+Key components include:
+
+- Book management components (BookList, BookForm, BookModal)
+- Author management components (AuthorList, AuthorForm, AuthorModal)
+- Authentication components (Login, Register)
+- Image upload components
+
+## Authentication
+
+Authentication is handled by Supabase, which provides:
+- User registration and login
+- Session management
+- Protected routes for authenticated operations
+
+## Deployment
+
+The application is deployed on Vercel(front-end) and Railway(backend):
+- API can be deployed to a Node.js hosting service (Railway, )
+- Web application can be deployed to Vercel, Netlify, or any Next.js-compatible platform

@@ -95,6 +95,8 @@ const Navbar = () => {
         duration: 3000,
         className: "bg-bookly-bg text-bookly-brown"
       })
+    } finally {
+      setIsCreatingAuthor(false)
     }
     setShowAddAuthorModal(false);
   }

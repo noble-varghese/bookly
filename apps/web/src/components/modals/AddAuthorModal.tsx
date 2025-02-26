@@ -64,6 +64,7 @@ const AddAuthorModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddAut
             avatarUrl: '',
             avatarImage: null
         })
+        setCoverPreview('')
     }
 
     const handleClose = () => {
