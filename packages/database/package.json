@@ -1,7 +1,7 @@
 {
   "name": "@bookly/database",
   "version": "0.0.0",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "migration:generate": "sequelize-cli model:generate --name",
