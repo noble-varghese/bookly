@@ -1,9 +1,8 @@
 import { QueryResolvers } from '@bookly/graphql-schema/src/types/generated';
 import { User } from '@bookly/database';
-import { Context } from '@bookly/graphql-schema/src/context';
 import { logger } from '../../utils/logger';
 
-export const queries: QueryResolvers<Context> = {
+export const queries: QueryResolvers = {
   users: async () => {
     try {
         logger.info('Comes for users query....')
@@ -13,7 +12,22 @@ export const queries: QueryResolvers<Context> = {
         throw error
     }
   },
-  user: async (_, { id }) => {
-    return await User.findByPk(id);
+  user: async (_, { email }) => {
+    try {
+      logger.info(`Fetching user with email: ${email}`);
+      const user = await User.findOne({
+        where: { email }
+      });
+      
+      if (!user) {
+        logger.info(`No user found with email: ${email}`);
+        return null;
+      }
+
+      return user;
+    } catch (error) {
+      logger.error(`Error fetching user with email ${email}:`, error);
+      throw error;
+    }
   }
 };

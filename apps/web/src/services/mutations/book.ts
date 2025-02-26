@@ -12,6 +12,30 @@ export const CREATE_BOOK = gql(`
         id
         name
       }
+      coverUrl
     }
+  }
+
+`)
+
+export const UPDATE_BOOK = gql(`
+  mutation UpdateBook($id: ID!, $input: UpdateBookInput!) {
+    updateBook(id: $id, input: $input) {
+      id
+      title
+      description
+      publishedDate
+      coverUrl
+      author {
+        id
+        name
+      }
+    }
+  }
+`)
+
+export const DELETE_BOOK = gql(`
+  mutation DeleteBook($id: ID!) {
+    deleteBook(id: $id)
   }
 `)

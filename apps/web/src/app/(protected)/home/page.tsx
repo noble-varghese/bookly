@@ -1,12 +1,18 @@
 'use client'
-import Image from "next/image";
-import { BookOpen, Edit, Trash2 } from "lucide-react";
-import { use, useCallback, useEffect, useRef, useState } from "react";
-import { Book } from "@/services/generated/graphql";
-import { BookService } from "@/services/api/bookService";
-import { Spinner } from "@/components/ui/spinner";
 import BookDetailsModal from "@/components/modals/BookDetailsModal";
+import DeleteConfirmationModal from "@/components/modals/DeleteConfirmationModal";
+import EditBookModal from "@/components/modals/EditBookModal";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { useToast } from "@/components/ui/use-toast";
+import { BookService } from "@/services/api/bookService";
+import { CdnStoreService } from "@/services/api/commonService";
+import { Book } from "@/services/generated/graphql";
+import { useBookStore } from "@/store/bookStore";
+import { EditBookInput } from "@/types/book";
+import { BookOpen, Edit, Trash2 } from "lucide-react";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 
 export default function Home() {
@@ -19,7 +25,17 @@ export default function Home() {
   const initialFetchDone = useRef(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
+  const [bookToUpdate, setBookToUpdate] = useState<Book | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdatingBook, setIsUpdatingBook] = useState(false);
+
+  const { toast } = useToast()
+
+  const newBook = useBookStore(state => state.newBook);
+  const resetNewBook = useBookStore(state => state.resetNewBook);
 
   const openBookDetails = (book: Book) => {
     setSelectedBook(book);
@@ -88,25 +104,105 @@ export default function Home() {
     };
   }, [fetchBooks, hasMore, loading, page]);
 
-  const handleEditBook = (book: Book) => {
+  useEffect(() => {
+    if (newBook) {
+      setPopularBooks(prev => {
+        const exists = prev.some(book => book.id === newBook.id);
+        if (exists) return prev;
+        return [newBook, ...prev];
+      });
+      resetNewBook();
+    }
+  }, [newBook]);
+
+  const openEditModal = (book: Book) => {
     setSelectedBook(book);
-    setIsEditMode(true);
+    setIsEditModalOpen(true)
     // TODO: Implement edit book logic
     console.log('Editing book:', book);
   };
 
-  const handleDeleteBook = async (bookId: string) => {
-    try {
-      // TODO: Implement delete book logic
-      // await BookService.deleteBook(bookId);
-      setPopularBooks(prev => prev.filter(book => book.id !== bookId));
+  const closeEditModal = ()=> {
+    setSelectedBook(null);
+    setIsEditModalOpen(false)
+  }
+
+  const openDeleteModal = (book: Book) => {
+    setBookToDelete(book);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setTimeout(() => setBookToDelete(null), 300);
+  };
+
+  const handleEditBook = async(bookId: string, updateData: EditBookInput) => {
+    if (!bookId) return;
+
+    try{
+      setIsUpdatingBook(true);
+
+      if (updateData.coverImage) {
+        const coverUrl = await CdnStoreService.uploadImage(updateData.coverImage)
+        updateData.coverUrl = coverUrl
+      }
+      console.log(updateData)
+      const updatedBook = await BookService.updateBook(bookId, updateData)
       
-      // Optional: Add success notification
-      console.log('Book deleted successfully');
+      setPopularBooks(prev => 
+        prev.map(book => book.id === bookId ? updatedBook : book)
+      );
+
+      setIsEditModalOpen(false)
+      toast({
+        title: "Success!",
+        description: "Book has been updated successfully. Please try again.",
+        variant: "default",
+        duration: 3000,
+        className: "bg-bookly-bg text-bookly-brown"
+      });
+      
+    } catch(error) {
+      console.error('Error updating the book: ', error)
+      toast({
+        title: "Error",
+        description: "Failed to update the book. Please try again.",
+        variant: "default",
+        duration: 3000,
+        className: "bg-bookly-bg text-bookly-brown"
+      });
+    } finally {
+      setIsUpdatingBook(false)
+    }
+  }
+
+  const handleDeleteBook = async () => {
+    if (!bookToDelete) return;
+    try {
+      setIsDeleting(true);
+      const bookId = bookToDelete.id
+      await BookService.deleteBook({ bookId });
+      setPopularBooks(prev => prev.filter(book => book.id !== bookId));
+
+      toast({
+        title: "Success!",
+        description: "Book has been deleted successfully.",
+        variant: "default",
+        duration: 3000,
+        className: "bg-bookly-bg text-bookly-brown"
+      });
     } catch (error) {
       console.error('Error deleting book:', error);
-      // TODO: Add error handling (e.g., show error toast)
-      alert('Failed to delete the book. Please try again.');
+      toast({
+        title: "Error",
+        description: "Failed to delete the book. Please try again.",
+        variant: "destructive",
+        duration: 3000,
+        className: "bg-bookly-bg text-bookly-brown"
+      });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -119,9 +215,6 @@ export default function Home() {
             <h2 className="text-3xl font-regular text-bookly-brown mb-2">POPULAR BESTSELLERS</h2>
             <p className="text-gray-500 text-sm">We picked up the most popular books for you, based on your taste. Check it!</p>
           </div>
-          {/* <button className="px-6 py-2 bg-[#F4B266] text-white rounded-lg hover:bg-[#e5a55f] transition-colors">
-            Watch full list
-          </button> */}
         </div>
 
         {isEmpty && loading ? (
@@ -148,7 +241,7 @@ export default function Home() {
               {popularBooks.map((book, index) => (
                 <div key={`${book.id}-${index}`} className="flex flex-col group relative">
                   <div className="aspect-[2/3] relative w-full bg-gray-100 rounded-lg shadow-lg overflow-hidden cursor-pointer"
-                     onClick={() => openBookDetails(book)}
+                    onClick={() => openBookDetails(book)}
                   >
                     {book.coverUrl ? (
                       <Image
@@ -166,25 +259,22 @@ export default function Home() {
                       </div>
                     )}
                     <div className="absolute top-2 right-2 z-10 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button 
-                        variant="secondary" 
+                      <Button
+                        variant="secondary"
                         className="bg-white/80 hover:bg-white/90 w-8 h-8 p-1 rounded-full"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleEditBook(book);
+                          openEditModal(book);
                         }}
                       >
                         <Edit className="w-4 h-4 text-bookly-brown" />
                       </Button>
-                      <Button 
-                        variant="destructive" 
+                      <Button
+                        variant="destructive"
                         className="bg-red-500/80 hover:bg-red-500/90 w-8 h-8 p-1 rounded-full"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Optionally add a confirmation dialog before deletion
-                          if (window.confirm(`Are you sure you want to delete the book "${book.title}"?`)) {
-                            handleDeleteBook(book.id);
-                          }
+                          openDeleteModal(book);
                         }}
                       >
                         <Trash2 className="w-4 h-4 text-white" />
@@ -196,11 +286,26 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <BookDetailsModal 
+            <BookDetailsModal
               book={selectedBook}
               isOpen={isBookModalOpen}
               onClose={closeBookDetails}
               onReviewSubmit={handleReviewSubmit}
+            />
+            <EditBookModal
+              book={selectedBook}
+              isOpen={isEditModalOpen}
+              onClose={closeEditModal}
+              onSubmit={handleEditBook}
+              isLoading={isUpdatingBook}
+            />
+            <DeleteConfirmationModal
+              isOpen={isDeleteModalOpen}
+              onClose={closeDeleteModal}
+              onConfirm={handleDeleteBook}
+              isLoading={isDeleting}
+              title="Delete Book"
+              description={`Are you sure you want to delete "${bookToDelete?.title}"? This action cannot be undone.`}
             />
 
             {hasMore && (

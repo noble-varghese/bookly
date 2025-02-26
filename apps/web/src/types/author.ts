@@ -6,3 +6,16 @@ export interface Author {
     createdAt: Date
     updatedAt: Date
 }
+
+export interface CreateAuthorInput {
+    name: string;
+    bio: string;
+    bornDate: string;
+    avatarUrl: string;
+    avatarImage: File | null
+}
+
+
+export interface DeleteAuthorInput {
+    authorId: string
+}

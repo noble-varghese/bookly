@@ -6,9 +6,10 @@ import { BaseAttributes, baseFields } from "./base";
 export interface UserAttributes extends BaseAttributes {
   name: string;
   email: string;
+  avatarUrl: string
 }
 
-export interface UserModel extends Model<UserAttributes> {}
+export interface UserModel extends Model<UserAttributes>, UserAttributes {}
 
 export const User = sequelize.define<UserModel>('User', {
   ...baseFields,
@@ -22,6 +23,13 @@ export const User = sequelize.define<UserModel>('User', {
     unique: true,
     validate: {
       isEmail: true
+    }
+  },
+  avatarUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+      isUrl: true
     }
   }
 });

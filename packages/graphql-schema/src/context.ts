@@ -1,8 +1,9 @@
-// packages/graphql-schema/src/context.ts
+import { UserModel } from '@bookly/database';
+import { Request } from 'express';
+import { DataLoaders } from './dataloaders';
+
 export interface Context {
-  user?: {
-    id: string;
-    email: string;
-  };
-  // Add other context properties as needed
+  user?: UserModel;
+  req: Request;
+  loaders: DataLoaders;
 }

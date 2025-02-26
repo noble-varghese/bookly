@@ -34,7 +34,6 @@ const TopBar = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       const userDetails = await getUserDetails();
-      console.log('======>>>>>>>>>>>>>>>>>>>>>', userDetails);
       if (userDetails) {
         setUserDetails(userDetails);
       }

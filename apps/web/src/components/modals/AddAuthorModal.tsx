@@ -1,8 +1,10 @@
 
-import { FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Spinner } from "@/components/ui/spinner"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import { CreateAuthorInput } from '@/types/author';
+import { useToast } from '../ui/use-toast';
 
 interface AddAuthorModalProps {
     isOpen: boolean,
@@ -11,21 +13,16 @@ interface AddAuthorModalProps {
     isLoading?: boolean;
 }
 
-interface CreateAuthorInput {
-    name: string;
-    bio: string;
-    bornDate: string;
-    avatarUrl: string;
-}
-
 const AddAuthorModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddAuthorModalProps) => {
     const [authorData, setAuthorData] = useState<CreateAuthorInput>({
         name: '',
         bio: '',
         bornDate: '',
         avatarUrl: '',
+        avatarImage: null
     })
-
+    const [coverPreview, setCoverPreview] = useState<string>('');
+    const {toast} = useToast()
     // Handling the esc key presses
     useEffect(() => {
         const handleEscKey = (event: KeyboardEvent) => {
@@ -42,6 +39,22 @@ const AddAuthorModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddAut
         };
     }, [isOpen]);
 
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setAuthorData({
+                ...authorData,
+                avatarImage: file
+            });
+
+            // Create preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCoverPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const resetForm = () => {
         setAuthorData({
@@ -49,6 +62,7 @@ const AddAuthorModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddAut
             bio: '',
             bornDate: '',
             avatarUrl: '',
+            avatarImage: null
         })
     }
 
@@ -111,14 +125,26 @@ const AddAuthorModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddAut
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-bookly-brown mb-1">
-                                        Profile url
+                                        Cover Image
                                     </label>
-                                    <input
-                                        type="text"
-                                        value={authorData.avatarUrl}
-                                        onChange={(e) => setAuthorData({ ...authorData, avatarUrl: e.target.value })}
-                                        className="w-full p-2 border text-bookly-textInput border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
-                                    />
+                                    <div className="border border-bookly-cream rounded-lg p-3">
+                                        {coverPreview && (
+                                            <div className="mb-3">
+                                                <img
+                                                    src={coverPreview}
+                                                    alt="Book cover preview"
+                                                    className="h-32 mx-auto object-contain"
+                                                />
+                                            </div>
+                                        )}
+                                        <input
+                                            type="file"
+                                            id="cover-image"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="w-full text-sm text-bookly-textInput file:mr-3 file:py-2 file:px-4 file:text-sm file:border-0 file:rounded-lg file:bg-bookly-orange file:text-white hover:file:bg-bookly-orange/90"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 

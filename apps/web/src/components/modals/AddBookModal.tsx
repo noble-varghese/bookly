@@ -1,7 +1,8 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Spinner } from "@/components/ui/spinner"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import { CreateBookInput } from '@/types/book';
 
 interface AddBookModalProps {
     isOpen: boolean,
@@ -10,22 +11,16 @@ interface AddBookModalProps {
     isLoading?: boolean;
 }
 
-interface CreateBookInput {
-  title: string;
-  description: string;
-  publishedDate: string;
-  authorId: string;
-  coverUrl?: string;
-}
-
 const AddBookModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddBookModalProps) => {
     const [bookData, setBookData] = useState<CreateBookInput>({
         title: '',
         description: '',
         publishedDate: '',
         authorId: '',
-        coverUrl: ''
+        coverUrl: '',
+        coverImage: null
     })
+    const [coverPreview, setCoverPreview] = useState<string>('');
 
     // Handling the esc key presses
     useEffect(() => {
@@ -37,11 +32,26 @@ const AddBookModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddBookM
 
         window.addEventListener('keydown', handleEscKey);
 
-        // Cleanup listener 
         return () => {
             window.removeEventListener('keydown', handleEscKey);
         };
     }, [isOpen]);
+
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setBookData({
+                ...bookData,
+                coverImage: file
+            });
+            
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setCoverPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     
     
     const resetForm = () => {
@@ -50,8 +60,10 @@ const AddBookModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddBookM
             description: '',
             publishedDate: '',
             authorId: '', 
-            coverUrl: ''
+            coverUrl: '',
+            coverImage: null
         })
+        setCoverPreview('')
     }
     
     const handleClose = () => {
@@ -61,9 +73,8 @@ const AddBookModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddBookM
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        console.log(bookData)
         onSubmit(bookData); 
-        // resetForm();
+        resetForm();
     }
 
     return (
@@ -74,13 +85,13 @@ const AddBookModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddBookM
             <div className="p-6 md:p-8">
               <div className="flex justify-between items-start mb-6">
                 <h2 className="text-2xl font-bold text-bookly-brown">Add new book</h2>
-                <button
+                {/* <button
                   onClick={handleClose}
                   className="rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-100"
                   aria-label="Close dialog"
                 >
                   <X size={20} className="text-bookly-textInput" />
-                </button>
+                </button> */}
               </div>
 
               <form onSubmit={handleSubmit}>
@@ -142,14 +153,26 @@ const AddBookModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddBookM
 
                     <div>
                       <label className="block text-sm font-medium text-bookly-brown mb-1">
-                        Cover URL
+                        Cover Image
                       </label>
-                      <input
-                        type="text"
-                        value={bookData.coverUrl}
-                        onChange={(e) => setBookData({ ...bookData, coverUrl: e.target.value })}
-                        className="w-full p-2 border text-bookly-textInput border-bookly-cream rounded-lg focus:outline-none focus:border-bookly-orange"
-                      />
+                      <div className="border border-bookly-cream rounded-lg p-3">
+                        {coverPreview && (
+                          <div className="mb-3">
+                            <img 
+                              src={coverPreview} 
+                              alt="Book cover preview" 
+                              className="h-32 mx-auto object-contain"
+                            />
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          id="cover-image"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="w-full text-sm text-bookly-textInput file:mr-3 file:py-2 file:px-4 file:text-sm file:border-0 file:rounded-lg file:bg-bookly-orange file:text-white hover:file:bg-bookly-orange/90"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

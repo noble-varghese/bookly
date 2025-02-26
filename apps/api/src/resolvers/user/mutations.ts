@@ -1,14 +1,17 @@
 import { MutationResolvers } from '@bookly/graphql-schema/src/types/generated';
 import { User, UserAttributes} from '@bookly/database';
-import { Context } from '@bookly/graphql-schema/src/context';
+import { logger } from '../../utils/logger';
 
-export const mutations: MutationResolvers<Context> = {
+export const mutations: MutationResolvers = {
 
   createUser: async (_, { input }) => {
     try {
+      logger.info('Creating new users....!!')
+      logger.info(input)
       const user = await User.create({
         name: input.name,
         email: input.email,
+        avatarUrl: input.avatarUrl
       } as UserAttributes, {
         returning: true 
       });

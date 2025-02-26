@@ -8,8 +8,12 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "migrate": "pnpm dotenv -- pnpm --filter database migrate",
+    "migration:generate": "pnpm dotenv -- pnpm --filter database migration:generate",
     "backend:dev":"pnpm dotenv -- pnpm --filter api dev",
-    "frontend:dev": "pnpm dotenv -- pnpm --filter web dev"
+    "frontend:dev": "pnpm dotenv -- pnpm --filter web dev",
+    "migrate:up": "pnpm dotenv -- pnpm sequelize-cli db:migrate",
+    "backend:codegen": "pnpm --filter graphql-schema codegen",
+    "front-end:codegen": "pnpm --filter graphql-schema codegen"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.5",

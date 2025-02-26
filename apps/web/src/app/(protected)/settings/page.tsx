@@ -1,14 +1,17 @@
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Spinner } from '@/components/ui/spinner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useToast } from '@/components/ui/use-toast'
 import { getInitials, getUserDetails } from '@/lib/userDetailsUtils'
 import { PlusIcon } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [isLoading, setLoading] = useState(false)
   const [userDetails, setUserDetails] = useState({
     name: '',
     email: '',
@@ -16,16 +19,17 @@ const SettingsPage = () => {
     firstName: '',
     lastName: ''
   })
-
+  
   const [imageUrl, setImageUrl] = useState<string>("")
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const {toast} = useToast()
 
   useEffect(() => {
     const fetchUserDetails = async () => {
       const userDetails = await getUserDetails()
       if (userDetails) {
         const [firstName, lastName] = userDetails.name.split(' ');
-        setUserDetails({...userDetails, firstName, lastName})
+        setUserDetails({ ...userDetails, firstName, lastName })
         setImageUrl(userDetails.avatarUrl)
       }
     }
@@ -44,6 +48,24 @@ const SettingsPage = () => {
 
   const handlePlusClick = () => {
     fileInputRef.current?.click()
+  }
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // TODO: Update this logic to update the user.
+    setTimeout(() => {
+      setLoading(false);
+      // Maybe show a success message
+      toast({
+        title: "Success!",
+        description: "Settings updated successfully.",
+        variant: "default",
+        duration: 3000,
+        className: "bg-bookly-bg text-bookly-brown"
+      })
+    }, 1000);
   }
 
   return (
@@ -87,7 +109,7 @@ const SettingsPage = () => {
                 <p className="text-sm text-gray-500">Update your profile photo</p>
               </div>
             </div>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-bookly-brown mb-1">
@@ -137,8 +159,15 @@ const SettingsPage = () => {
                 <button
                   type="submit"
                   className="px-6 py-2 bg-bookly-orange text-white rounded-lg hover:bg-bookly-orange/90 transition-colors"
+                  disabled={isLoading}
                 >
-                  Save Changes
+                  {isLoading ? (
+                    <>
+                      <Spinner className="text-white mr-2" size="sm" />
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
                 </button>
               </div>
             </form>

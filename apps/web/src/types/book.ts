@@ -17,6 +17,20 @@ export interface CreateBookInput {
     publishedDate: string
     authorId: string
     coverUrl: string
+    coverImage?: File | null
+}
+
+export interface EditBookInput {
+    title: string
+    description: string
+    publishedDate: string
+    authorId: string
+    coverUrl: string
+    coverImage?: File | null
+}
+
+export interface DeleteBookInput {
+    bookId: string
 }
 
 export interface CreateBookMutationResponse {

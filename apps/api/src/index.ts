@@ -10,6 +10,8 @@ import { schema } from '@bookly/graphql-schema'
 import { logger } from './utils/logger';
 import {resolvers} from './resolvers'
 import {initDatabase} from '@bookly/database'
+import { createContext } from './context';
+import { SupabaseClientInit } from './utils/supabaseClient';
 
 const typeDefs = schema
 
@@ -21,6 +23,7 @@ async function startApolloServer() {
   await initDatabase()
   const app = express();
   const httpServer = http.createServer(app);
+  SupabaseClientInit.init()
 
   // Set up Apollo Server
   const server = new ApolloServer<Context>({
@@ -34,7 +37,8 @@ async function startApolloServer() {
 
   const apolloMiddleware = expressMiddleware(server, {
     context: async ({ req }) => ({
-      token: req.headers.authorization || ''
+      ...createContext(),
+      token: req.headers.authorization || '',
     })
   }) as express.RequestHandler;
 

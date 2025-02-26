@@ -1,15 +1,8 @@
-import { QueryResolvers, MutationResolvers, Resolvers } from '@bookly/graphql-schema/src/types/generated';
-import { queries } from './queries';
+import { Resolvers } from '@bookly/graphql-schema/src/types/generated';
 import { mutations } from './mutations';
-import { Context } from '@bookly/graphql-schema/src/context';
+import { queries } from './queries';
 
-
-interface UserResolvers {
-  Query: QueryResolvers<Context>;
-  Mutation: MutationResolvers<Context>;
-}
-
-export const userResolvers: Resolvers<Context> = {
+export const userResolvers: Resolvers = {
     Query: queries,
     Mutation: mutations
 };

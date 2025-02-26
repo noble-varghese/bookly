@@ -2,11 +2,14 @@ type User {
   id: ID!
   name: String!
   email: String!
+  avatarUrl: String
+  createdAt: DateTime! 
+  updatedAt: DateTime!
 }
 
 type Query {
   users: [User!]!
-  user(id: ID!): User
+  user(email: String!): User
 }
 
 type Mutation {
@@ -18,6 +21,7 @@ type Mutation {
 input CreateUserInput {
   name: String!
   email: String!
+  avatarUrl: String
 }
 
 input UpdateUserInput {
