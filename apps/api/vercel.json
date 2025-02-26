@@ -1,8 +1,5 @@
 {
     "version": 2,
-    "buildCommand": "cd ../../ && pnpm install:ordered && pnpm turbo run build --filter=@bookly/api...",
-    "installCommand": "pnpm install && pnpm install --dev",
-    "outputDirectory": "dist",
     "builds": [
         {
             "src": "dist/index.js",
