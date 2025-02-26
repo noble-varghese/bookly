@@ -71,12 +71,6 @@ importers:
       mongoose:
         specifier: ^8.10.1
         version: 8.10.1
-      pg:
-        specifier: ^8.13.3
-        version: 8.13.3
-      pg-hstore:
-        specifier: ^2.3.4
-        version: 2.3.4
       pino:
         specifier: ^9.6.0
         version: 9.6.0
