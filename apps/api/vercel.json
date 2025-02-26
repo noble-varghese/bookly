@@ -1,7 +1,7 @@
 {
     "version": 2,
     "buildCommand": "pnpm install && pnpm install --dev && pnpm turbo run build --filter=@bookly/api...",
-    "installCommand": "cd ../.. && pnpm install && pnpm install --dev",
+    "installCommand": "pnpm install && pnpm install --dev",
     "outputDirectory": "dist",
     "routes": [
         {
