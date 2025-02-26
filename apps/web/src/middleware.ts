@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server'
 
 // Add all public routes here
 const publicRoutes = ['/auth/callback']
-const authRoutes = ['/login', '/signup', '/'] // Routes that authenticated users shouldn't access
+const authRoutes = ['/login', '/signup', '/signup-success', '/'] // Routes that authenticated users shouldn't access
 
 
 export async function middleware(req: NextRequest) {

@@ -1,6 +1,10 @@
 # Bookly
 
-Bookly is a fullstack application that allows users to manage books and authors. The application provides complete CRUD (Create, Read, Update, Delete) operations for both books and authors, with authentication handled by Supabase and image storage using supabase storage.
+Checkout the project [here](https://bookly-web-hazel.vercel.app/home)
+
+NOTE: Authentication is currently restricted to Sprinto accounts only. So login with your sprinto gmail account.
+
+Bookly is a fullstack application that allows users to manage books and authors. The application provides complete CRUD (Create, Read, Update, Delete) operations for both books and authors, with authentication handled by Supabase and image storage using supabase storage. The application is deployed on [Vercel(front-end)](https://vercel.com/) and [Railway(backend)](https://railway.com/):
 
 ## Features
 
@@ -108,7 +112,7 @@ This will build both the API and web application for production.
 
 ## GraphQL Schema
 
-The API uses a modular GraphQL schema approach with files located in the `apps/api/src/schema` directory.
+The API uses a modular GraphQL schema approach with files located in the [schema](apps/api/src/schema) directory.
 
 ### Main Types
 
@@ -136,6 +140,8 @@ The API uses a modular GraphQL schema approach with files located in the `apps/a
   - `uploadBookCover`: Upload a cover image for a book
   - `uploadAuthorImage`: Upload a profile image for an author
 
+Implemented batch load authors for books and books for authors to prevent N+1 query issues.
+
 ## Frontend Components
 
 The web application uses a component-based architecture with shadcn UI components and lucide-react icons for a clean, responsive interface.
@@ -144,8 +150,9 @@ Key components include:
 
 - Book management components (BookList, BookForm, BookModal)
 - Author management components (AuthorList, AuthorForm, AuthorModal)
-- Authentication components (Login, Register)
-- Image upload components
+- Authentication components (Login, Settings)
+- Image upload components (using supabase)
+- Paginated infinite scroll on the book and author listing page.
 
 ## Authentication
 
@@ -154,8 +161,3 @@ Authentication is handled by Supabase, which provides:
 - Session management
 - Protected routes for authenticated operations
 
-## Deployment
-
-The application is deployed on Vercel(front-end) and Railway(backend):
-- API can be deployed to a Node.js hosting service (Railway, )
-- Web application can be deployed to Vercel, Netlify, or any Next.js-compatible platform

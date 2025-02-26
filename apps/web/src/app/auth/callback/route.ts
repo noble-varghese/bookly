@@ -19,8 +19,6 @@ export async function GET(request: Request) {
       if (session?.user) {
         const { user } = session
 
-        console.log('====>>>>>>>>>>>>>>>>>>>>>>>>>.')
-        console.log(user)
         const userExists = await UserService.checkUserExists(user.email!)
 
         if (!userExists) {
